@@ -1,7 +1,7 @@
 {
   "name": "atom-html-preview",
   "main": "./lib/atom-html-preview",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A live preview tool for Atom Editor.",
   "activationEvents": [
     "atom-html-preview:toggle"
