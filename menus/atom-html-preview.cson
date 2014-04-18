@@ -1,6 +1,6 @@
 'context-menu':
   '.overlayer':
-      'Preview HTML': 'html-preview:toggle'
+      'Preview HTML': 'atom-html-preview:toggle'
 
 'menu': [
   {
@@ -8,7 +8,7 @@
     'submenu': [
       'label': 'Preview HTML'
       'submenu': [
-        { 'label': 'Enable Preview', 'command': 'html-preview:toggle' }
+        { 'label': 'Enable Preview', 'command': 'atom-html-preview:toggle' }
       ]
     ]
   }
