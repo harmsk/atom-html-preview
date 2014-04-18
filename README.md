@@ -11,4 +11,4 @@ Toogle HTML Preview:
 
 Press `CTRL-P` in editor to open Preview.
 
-![Atom HTML Preview][https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-html-preview.png]
+![Atom HTML Preview](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-html-preview.png)
