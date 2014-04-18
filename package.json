@@ -1,0 +1,17 @@
+{
+  "name": "atom-html-preview",
+  "main": "./lib/atom-html-preview",
+  "version": "0.0.0",
+  "description": "A live preview tool for Atom Editor.",
+  "activationEvents": [
+    "atom-html-preview:toggle"
+  ],
+  "repository": "https://github.com/webBoxio/atom-html-preview",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "underscore-plus": "^1.2.1"
+  }
+}

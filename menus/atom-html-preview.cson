@@ -1,0 +1,15 @@
+'context-menu':
+  '.overlayer':
+      'Preview HTML': 'html-preview:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Preview HTML'
+      'submenu': [
+        { 'label': 'Enable Preview', 'command': 'html-preview:toggle' }
+      ]
+    ]
+  }
+]
