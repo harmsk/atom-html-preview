@@ -1,4 +1,5 @@
 url = require 'url'
+{CompositeDisposable} = require 'atom'
 
 HtmlPreviewView = require './atom-html-preview-view'
 
@@ -6,8 +7,11 @@ module.exports =
   htmlPreviewView: null
 
   activate: (state) ->
-    atom.workspaceView.command 'atom-html-preview:toggle', =>
-      @toggle()
+    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+    @subscriptions = new CompositeDisposable
+
+    # Register command that toggles this view
+    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-html-preview:toggle': => @toggle()
 
     atom.workspace.registerOpener (uriToOpen) ->
       try
@@ -43,3 +47,6 @@ module.exports =
       if htmlPreviewView instanceof HtmlPreviewView
         htmlPreviewView.renderHTML()
         previousActivePane.activate()
+
+  deactivate: ->
+    @subscriptions.dispose()
