@@ -102,7 +102,10 @@ class AtomHtmlPreviewView extends ScrollView
     </html>
     """
     iframe = document.createElement("iframe")
-    iframe.src = "data:text/html;charset=utf-8,#{encodeURI(text)}"
+    # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
+    # Allows for the use of relative resources (scripts, styles)
+    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
+    iframe.src = @getPath()
     @html $ iframe
     @trigger('atom-html-preview:html-changed')
 
