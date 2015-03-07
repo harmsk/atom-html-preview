@@ -70,37 +70,16 @@ class AtomHtmlPreviewView extends ScrollView
         pane.activateItem(this)
 
     if @editor?
-      @subscribe(@editor.getBuffer(), 'contents-modified', changeHandler)
+      @subscribe(@editor.getBuffer(), 'contents-modified', _.debounce(changeHandler, 700))
       @subscribe @editor, 'path-changed', => @trigger 'title-changed'
 
   renderHTML: ->
     @showLoading()
     if @editor?
-      @renderHTMLCode(@editor.getText())
+      @renderHTMLCode()
 
   renderHTMLCode: (text) ->
-    text = """
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>HTML Preview</title>
-        <style>
-          body {
-            font-family: "Helvetica Neue", Helvetica, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            background-color: #fff;
-            overflow: scroll;
-            box-sizing: border-box;
-          }
-        </style>
-      </head>
-      <body>
-        #{text}
-      </body>
-    </html>
-    """
+    @editor.save()
     iframe = document.createElement("iframe")
     # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
     # Allows for the use of relative resources (scripts, styles)
