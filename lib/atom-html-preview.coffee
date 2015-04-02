@@ -4,6 +4,12 @@ url = require 'url'
 HtmlPreviewView = require './atom-html-preview-view'
 
 module.exports =
+  config:
+    triggerOnSave:
+      type: 'boolean'
+      description: 'Watch will trigger on save.'
+      default: false
+      
   htmlPreviewView: null
 
   activate: (state) ->
