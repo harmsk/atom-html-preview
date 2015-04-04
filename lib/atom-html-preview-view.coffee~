@@ -1,15 +1,10 @@
-path                  = require 'path'
-{CompositeDisposable, Disposable} = require 'atom'
-{$, $$$, ScrollView}  = require 'atom-space-pen-views'
-_                     = require 'underscore-plus'
+path = require 'path'
+{$, $$$, ScrollView} = require 'atom'
+_ = require 'underscore-plus'
 
 module.exports =
 class AtomHtmlPreviewView extends ScrollView
   atom.deserializers.add(this)
-
-  editorSub           : null
-  onDidChangeTitle    : -> new Disposable()
-  onDidChangeModified : -> new Disposable()
 
   @deserialize: (state) ->
     new AtomHtmlPreviewView(state)
@@ -26,18 +21,16 @@ class AtomHtmlPreviewView extends ScrollView
       if atom.workspace?
         @subscribeToFilePath(filePath)
       else
-        # @subscribe atom.packages.once 'activated', =>
-        atom.packages.onDidActivatePackage =>
+        @subscribe atom.packages.once 'activated', =>
           @subscribeToFilePath(filePath)
 
   serialize: ->
-    deserializer : 'AtomHtmlPreviewView'
-    filePath     : @getPath()
-    editorId     : @editorId
+    deserializer: 'AtomHtmlPreviewView'
+    filePath: @getPath()
+    editorId: @editorId
 
   destroy: ->
-    # @unsubscribe()
-    @editorSub.dispose()
+    @unsubscribe()
 
   subscribeToFilePath: (filePath) ->
     @trigger 'title-changed'
@@ -59,32 +52,29 @@ class AtomHtmlPreviewView extends ScrollView
     if atom.workspace?
       resolve()
     else
-      # @subscribe atom.packages.once 'activated', =>
-      atom.packages.onDidActivatePackage =>
+      @subscribe atom.packages.once 'activated', =>
         resolve()
         @renderHTML()
 
   editorForId: (editorId) ->
-    for editor in atom.workspace.getTextEditors()
+    for editor in atom.workspace.getEditors()
       return editor if editor.id?.toString() is editorId.toString()
     null
 
-  handleEvents: =>
+  handleEvents: ->
 
     changeHandler = =>
       @renderHTML()
-      pane = atom.workspace.paneForURI(@getURI())
+      pane = atom.workspace.paneForUri(@getUri())
       if pane? and pane isnt atom.workspace.getActivePane()
         pane.activateItem(this)
 
-    @editorSub = new CompositeDisposable
-
     if @editor?
       if not atom.config.get("atom-html-preview.triggerOnSave")
-        @editorSub.add @editor.onDidChange _.debounce(changeHandler, 700)
+        @subscribe(@editor.getBuffer(), 'contents-modified', _.debounce(changeHandler, 700))
       else
-        @editorSub.add @editor.onDidSave changeHandler
-      @editorSub.add @editor.onDidChangePath => @trigger 'title-changed'
+        @subscribe @editor.getBuffer(), 'saved', changeHandler
+      @subscribe @editor, 'path-changed', => @trigger 'title-changed'
 
   renderHTML: ->
     @showLoading()
@@ -99,8 +89,7 @@ class AtomHtmlPreviewView extends ScrollView
     iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
     iframe.src = @getPath()
     @html $ iframe
-    # @trigger('atom-html-preview:html-changed')
-    atom.commands.dispatch 'atom-html-preview', 'html-changed'
+    @trigger('atom-html-preview:html-changed')
 
   getTitle: ->
     if @editor?
@@ -108,7 +97,7 @@ class AtomHtmlPreviewView extends ScrollView
     else
       "HTML Preview"
 
-  getURI: ->
+  getUri: ->
     "html-preview://editor/#{@editorId}"
 
   getPath: ->

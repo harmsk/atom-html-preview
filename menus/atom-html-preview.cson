@@ -1,6 +1,7 @@
 'context-menu':
-  '.overlayer':
-      'Preview HTML': 'atom-html-preview:toggle'
+  'atom-text-editor': [
+    {label: 'Preview HTML', command: 'atom-html-preview:toggle'}
+  ]
 
 'menu': [
   {
