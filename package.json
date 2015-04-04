@@ -1,7 +1,7 @@
 {
   "name": "atom-html-preview",
   "main": "./lib/atom-html-preview",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A live preview tool for Atom Editor.",
   "repository": {
     "type": "git",
