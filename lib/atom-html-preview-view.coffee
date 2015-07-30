@@ -92,7 +92,7 @@ class AtomHtmlPreviewView extends ScrollView
       @renderHTMLCode()
 
   renderHTMLCode: (text) ->
-    if not atom.config.get("atom-html-preview.triggerOnSave") then @editor.save()
+    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @editor.save()
     iframe = document.createElement("iframe")
     # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
     # Allows for the use of relative resources (scripts, styles)
