@@ -12,8 +12,7 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.5",
-    "underscore-plus": "^1.6.6"
+    "atom-space-pen-views": "^2.0.5"
   },
   "readme": "# Atom HTML Preview\n\nA live preview tool for Atom Editor.\n\nInstall:\n```bash\napm install atom-html-preview\n```\n\nToogle HTML Preview:\n\nPress `CTRL-P` in editor to open Preview.\n\n![Atom HTML Preview](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-html-preview.png)\n\nAn example with [Twitter Bootstrap 3 Package][1]\n\n![Atom HTML Preview with Bootstrap](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-bootstrap-3.gif)\n\n[1]: http://atom.io/packages/atom-bootstrap3\n",
   "readmeFilename": "README.md",
@@ -28,52 +27,15 @@
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
-      {
-        "name": "underscore-plus",
-        "version": "1.6.6",
-        "path": "node_modules/underscore-plus/lib/underscore-plus.js"
-      },
-      {
-        "name": "underscore",
-        "version": "1.6.0",
-        "path": "node_modules/underscore-plus/node_modules/underscore/underscore.js"
-      }
     ],
     "extensions": {
       ".coffee": [
         "lib/atom-html-preview-view.coffee",
         "lib/atom-html-preview.coffee"
       ],
-      ".js": [
-        "node_modules/underscore-plus/lib/underscore-plus.js",
-        "node_modules/underscore-plus/node_modules/underscore/underscore-min.js",
-        "node_modules/underscore-plus/node_modules/underscore/underscore.js"
-      ],
       ".json": [
-        "node_modules/underscore-plus/node_modules/underscore/package.json",
-        "node_modules/underscore-plus/package.json",
         "package.json"
       ]
-    },
-    "folders": [
-      {
-        "paths": [
-          "lib",
-          ""
-        ],
-        "dependencies": {
-          "underscore-plus": "^1.2.1"
-        }
-      },
-      {
-        "paths": [
-          "node_modules/underscore-plus/lib",
-          "node_modules/underscore-plus"
-        ],
-        "dependencies": {
-          "underscore": "~1.6.0"
-        }
-      }
-    ]
+    }
   }
 }
