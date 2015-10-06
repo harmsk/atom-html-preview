@@ -1,8 +1,9 @@
-path                  = require 'path'
 fs                    = require 'fs'
 {CompositeDisposable, Disposable} = require 'atom'
 {$, $$$, ScrollView}  = require 'atom-space-pen-views'
 _                     = require 'underscore-plus'
+path                  = require 'path'
+os                    = require 'os'
 
 module.exports =
 class AtomHtmlPreviewView extends ScrollView
@@ -23,6 +24,7 @@ class AtomHtmlPreviewView extends ScrollView
 
     if @editorId?
       @resolveEditor(@editorId)
+      @tmpPath = @getPath() # after resolveEditor
     else
       if atom.workspace?
         @subscribeToFilePath(filePath)
@@ -93,20 +95,21 @@ class AtomHtmlPreviewView extends ScrollView
       @renderHTMLCode()
 
   save: ->
-    outPath = path.resolve "/tmp/" + @editor.getTitle() + ".tmp"
-    # console.log outPath
-    out = @editor.getText()
+    # Temp file path
+    outPath = path.resolve os.tmpdir() + @editor.getTitle()
+    # Add base tag; allow relative links to work despite being loaded
+    # as the src of an iframe
+    out = "<base href=\"" + @getPath() + "\">" + @editor.getText()
     fs.writeFileSync outPath, out
-    return outPath
+    @tmpPath = outPath
 
   renderHTMLCode: (text) ->
-    outPath = @getPath()
-    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then outPath = @save() # @editor.save()
+    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @save()
     iframe = document.createElement("iframe")
     # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
     # Allows for the use of relative resources (scripts, styles)
     iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
-    iframe.src = outPath
+    iframe.src = @tmpPath
     @html $ iframe
     # @trigger('atom-html-preview:html-changed')
     atom.commands.dispatch 'atom-html-preview', 'html-changed'
