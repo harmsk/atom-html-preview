@@ -7,9 +7,9 @@ Install:
 apm install atom-html-preview
 ```
 
-Toogle HTML Preview:
+Toggle HTML Preview:
 
-Press `CTRL-P` in editor to open Preview.
+Press `CTRL-SHIFT-H` in the editor to open the preview pane.
 
 ![Atom HTML Preview](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-html-preview.png)
 
