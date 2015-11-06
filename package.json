@@ -1,7 +1,7 @@
 {
   "name": "atom-html-preview",
   "main": "./lib/atom-html-preview",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "A live preview tool for Atom Editor.",
   "repository": {
     "type": "git",
@@ -26,8 +26,7 @@
   "_from": "../d-115111-11388-1t9q7wq/package.tgz",
   "_atomModuleCache": {
     "version": 1,
-    "dependencies": [
-    ],
+    "dependencies": [],
     "extensions": {
       ".coffee": [
         "lib/atom-html-preview-view.coffee",
