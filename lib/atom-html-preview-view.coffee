@@ -99,6 +99,19 @@ class AtomHtmlPreviewView extends ScrollView
     out = ""
     fileEnding = @editor.getTitle().split(".").pop()
 
+    if atom.config.get("atom-html-preview.enableMathJax")
+      out += """
+      <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['\\\\f$','\\\\f$']]},
+      menuSettings: {zoom: 'Click'}
+      });
+      </script>
+      <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+      </script>
+      """
+
     if atom.config.get("atom-html-preview.preserveWhiteSpaces") and fileEnding in atom.config.get("atom-html-preview.fileEndings")
       # Enclose in <pre> statement to preserve whitespaces
       out += """

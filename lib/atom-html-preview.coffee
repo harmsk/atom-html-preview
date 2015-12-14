@@ -20,6 +20,10 @@ module.exports =
       default: ["c", "h"]
       items:
         type: 'string'
+    enableMathJax:
+      type: 'boolean'
+      description: 'Enable MathJax inline rendering \\f$ \\omega = \\frac{1}{2 pi} \\f$'
+      default: false
 
   htmlPreviewView: null
 
