@@ -6,9 +6,20 @@ HtmlPreviewView       = require './atom-html-preview-view'
 module.exports =
   config:
     triggerOnSave:
-      type        : 'boolean'
-      description : 'Watch will trigger on save.'
-      default     : false
+      type: 'boolean'
+      description: 'Watch will trigger on save.'
+      default: false
+    preserveWhiteSpaces:
+      type: 'boolean'
+      description: 'Enclose data in pre statements.'
+      default: false
+    fileEndings:
+      type: 'array'
+      title: 'Preserve File Endings'
+      description: 'File endings to enclose in pre statements.'
+      default: ["c", "h"]
+      items:
+        type: 'string'
 
   htmlPreviewView: null
 

@@ -96,9 +96,23 @@ class AtomHtmlPreviewView extends ScrollView
   save: (callback) ->
     # Temp file path
     outPath = path.resolve os.tmpdir() + @editor.getTitle()
-    # Add base tag; allow relative links to work despite being loaded
-    # as the src of an iframe
-    out = "<base href=\"" + @getPath() + "\">" + @editor.getText()
+    out = ""
+    fileEnding = @editor.getTitle().split(".").pop()
+
+    if atom.config.get("atom-html-preview.preserveWhiteSpaces") and fileEnding in atom.config.get("atom-html-preview.fileEndings")
+      # Enclose in <pre> statement to preserve whitespaces
+      out += """
+      <style type="text/css">
+      body { white-space: pre; }
+      </style>
+      """
+    else
+      # Add base tag; allow relative links to work despite being loaded
+      # as the src of an iframe
+      out += "<base href=\"" + @getPath() + "\">"
+
+    out += @editor.getText()
+
     @tmpPath = outPath
     fs.writeFile outPath, out, callback
 
