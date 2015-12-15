@@ -1,7 +1,7 @@
 url                   = require 'url'
 {CompositeDisposable} = require 'atom'
 
-HtmlPreviewView       = require './atom-code-preview-view'
+HtmlPreviewView       = require './atom-html-preview-view'
 
 module.exports =
   config:
@@ -32,7 +32,7 @@ module.exports =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-code-preview:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-html-preview:toggle': => @toggle()
 
     atom.workspace.addOpener (uriToOpen) ->
       try
