@@ -11,18 +11,18 @@ module.exports =
       default: false
     preserveWhiteSpaces:
       type: 'boolean'
-      description: 'Enclose data in pre statements.'
+      description: 'Preserve white spaces and line endings.'
       default: false
     fileEndings:
       type: 'array'
-      title: 'Preserve File Endings'
-      description: 'File endings to enclose in pre statements.'
+      title: 'Preserve file endings'
+      description: 'File endings to preserve'
       default: ["c", "h"]
       items:
         type: 'string'
     enableMathJax:
       type: 'boolean'
-      description: 'Enable MathJax inline rendering \\f$ \\omega = \\frac{1}{2 pi} \\f$'
+      description: 'Enable MathJax inline rendering \\f$ \\pi \\f$'
       default: false
 
   htmlPreviewView: null
