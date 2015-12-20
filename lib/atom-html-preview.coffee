@@ -33,8 +33,6 @@ module.exports =
 
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       @subscriptions.add editor.onDidSave =>
-        console.log "onDidSave"
-        console.log htmlPreviewView?
         if htmlPreviewView? and htmlPreviewView instanceof HtmlPreviewView
           htmlPreviewView.renderHTML()
 
