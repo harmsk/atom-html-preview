@@ -16,6 +16,13 @@ module.exports =
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
+    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
+      @subscriptions.add editor.onDidSave =>
+        console.log "onDidSave"
+        console.log htmlPreviewView?
+        if htmlPreviewView? and htmlPreviewView instanceof HtmlPreviewView
+          htmlPreviewView.renderHTML()
+
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-html-preview:toggle': => @toggle()
 
@@ -33,9 +40,11 @@ module.exports =
         return
 
       if host is 'editor'
-        new HtmlPreviewView(editorId: pathname.substring(1))
+        @htmlPreviewView = new HtmlPreviewView(editorId: pathname.substring(1))
       else
-        new HtmlPreviewView(filePath: pathname)
+        @htmlPreviewView = new HtmlPreviewView(filePath: pathname)
+    
+      return htmlPreviewView
 
   toggle: ->
     editor = atom.workspace.getActiveTextEditor()
