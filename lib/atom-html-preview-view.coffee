@@ -39,7 +39,8 @@ class AtomHtmlPreviewView extends ScrollView
 
   destroy: ->
     # @unsubscribe()
-    @editorSub.dispose()
+    if editorSub?
+      @editorSub.dispose()
 
   subscribeToFilePath: (filePath) ->
     @trigger 'title-changed'
