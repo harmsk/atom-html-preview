@@ -1,0 +1,127 @@
+From 4f1a03499fbd9cc9563b6d387ce027456d30b66b Mon Sep 17 00:00:00 2001
+From: Daniel <d.b2@gmx.de>
+Date: Sun, 20 Dec 2015 13:05:55 +0100
+Subject: [PATCH 1/4] Fixed #79 (wrong indention)
+
+---
+ lib/atom-html-preview-view.coffee | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/lib/atom-html-preview-view.coffee b/lib/atom-html-preview-view.coffee
+index f0339ae..778b53c 100644
+--- a/lib/atom-html-preview-view.coffee
++++ b/lib/atom-html-preview-view.coffee
+@@ -103,15 +103,15 @@ class AtomHtmlPreviewView extends ScrollView
+     fs.writeFile outPath, out, callback
+ 
+   renderHTMLCode: (text) ->
+-    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @save () =>
+-      iframe = document.createElement("iframe")
+-      # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
+-      # Allows for the use of relative resources (scripts, styles)
+-      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
+-      iframe.src = @tmpPath
+-      @html $ iframe
+-      # @trigger('atom-html-preview:html-changed')
+-      atom.commands.dispatch 'atom-html-preview', 'html-changed'
++    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @save()
++    iframe = document.createElement("iframe")
++    # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
++    # Allows for the use of relative resources (scripts, styles)
++    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
++    iframe.src = @tmpPath
++    @html $ iframe
++    # @trigger('atom-html-preview:html-changed')
++    atom.commands.dispatch 'atom-html-preview', 'html-changed'
+ 
+   getTitle: ->
+     if @editor?
+
+From 998a22d684a9432bb64f690a318947c222588346 Mon Sep 17 00:00:00 2001
+From: Daniel <d.b2@gmx.de>
+Date: Sun, 20 Dec 2015 13:18:43 +0100
+Subject: [PATCH 2/4] Fixed a bug (#67) that led to error messages in Atom
+
+---
+ lib/atom-html-preview-view.coffee | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/atom-html-preview-view.coffee b/lib/atom-html-preview-view.coffee
+index 778b53c..15e5dc3 100644
+--- a/lib/atom-html-preview-view.coffee
++++ b/lib/atom-html-preview-view.coffee
+@@ -39,7 +39,8 @@ class AtomHtmlPreviewView extends ScrollView
+ 
+   destroy: ->
+     # @unsubscribe()
+-    @editorSub.dispose()
++    if editorSub?
++      @editorSub.dispose()
+ 
+   subscribeToFilePath: (filePath) ->
+     @trigger 'title-changed'
+
+From 9be25cb915ae3385168e651898e488cb7ca9de2e Mon Sep 17 00:00:00 2001
+From: Daniel <d.b2@gmx.de>
+Date: Sun, 20 Dec 2015 13:30:47 +0100
+Subject: [PATCH 3/4] Implemented a rather simple method to solve #49
+
+---
+ lib/atom-html-preview.coffee | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/lib/atom-html-preview.coffee b/lib/atom-html-preview.coffee
+index cb3e638..3d0c72f 100644
+--- a/lib/atom-html-preview.coffee
++++ b/lib/atom-html-preview.coffee
+@@ -16,6 +16,13 @@ module.exports =
+     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+     @subscriptions = new CompositeDisposable
+ 
++    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
++      @subscriptions.add editor.onDidSave =>
++        console.log "onDidSave"
++        console.log htmlPreviewView?
++        if htmlPreviewView? and htmlPreviewView instanceof HtmlPreviewView
++          htmlPreviewView.renderHTML()
++
+     # Register command that toggles this view
+     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-html-preview:toggle': => @toggle()
+ 
+@@ -33,9 +40,11 @@ module.exports =
+         return
+ 
+       if host is 'editor'
+-        new HtmlPreviewView(editorId: pathname.substring(1))
++        @htmlPreviewView = new HtmlPreviewView(editorId: pathname.substring(1))
+       else
+-        new HtmlPreviewView(filePath: pathname)
++        @htmlPreviewView = new HtmlPreviewView(filePath: pathname)
++    
++      return htmlPreviewView
+ 
+   toggle: ->
+     editor = atom.workspace.getActiveTextEditor()
+
+From 4ea483f7dc0dffbfe180048eaa6e8ed2be8b2d2e Mon Sep 17 00:00:00 2001
+From: dc2 <d.b2@gmx.de>
+Date: Sun, 20 Dec 2015 13:37:09 +0100
+Subject: [PATCH 4/4] Removed debug outputs.
+
+---
+ lib/atom-html-preview.coffee | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/lib/atom-html-preview.coffee b/lib/atom-html-preview.coffee
+index 3d0c72f..016458c 100644
+--- a/lib/atom-html-preview.coffee
++++ b/lib/atom-html-preview.coffee
+@@ -18,8 +18,6 @@ module.exports =
+ 
+     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
+       @subscriptions.add editor.onDidSave =>
+-        console.log "onDidSave"
+-        console.log htmlPreviewView?
+         if htmlPreviewView? and htmlPreviewView instanceof HtmlPreviewView
+           htmlPreviewView.renderHTML()
+ 
