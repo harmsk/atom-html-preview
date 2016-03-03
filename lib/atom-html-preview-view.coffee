@@ -39,7 +39,8 @@ class AtomHtmlPreviewView extends ScrollView
 
   destroy: ->
     # @unsubscribe()
-    @editorSub.dispose()
+    if editorSub?
+      @editorSub.dispose()
 
   subscribeToFilePath: (filePath) ->
     @trigger 'title-changed'
@@ -103,15 +104,15 @@ class AtomHtmlPreviewView extends ScrollView
     fs.writeFile outPath, out, callback
 
   renderHTMLCode: (text) ->
-    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @save () =>
-      iframe = document.createElement("iframe")
-      # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
-      # Allows for the use of relative resources (scripts, styles)
-      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
-      iframe.src = @tmpPath
-      @html $ iframe
-      # @trigger('atom-html-preview:html-changed')
-      atom.commands.dispatch 'atom-html-preview', 'html-changed'
+    if not atom.config.get("atom-html-preview.triggerOnSave") and @editor.getPath()? then @save()
+    iframe = document.createElement("iframe")
+    # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
+    # Allows for the use of relative resources (scripts, styles)
+    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
+    iframe.src = @tmpPath
+    @html $ iframe
+    # @trigger('atom-html-preview:html-changed')
+    atom.commands.dispatch 'atom-html-preview', 'html-changed'
 
   getTitle: ->
     if @editor?
