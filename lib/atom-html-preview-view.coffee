@@ -95,7 +95,7 @@ class AtomHtmlPreviewView extends ScrollView
 
   save: (callback) ->
     # Temp file path
-    outPath = path.resolve os.tmpdir() + @editor.getTitle()
+    outPath = path.resolve path.join(os.tmpdir(), @editor.getTitle())
     # Add base tag; allow relative links to work despite being loaded
     # as the src of an iframe
     out = "<base href=\"" + @getPath() + "\">" + @editor.getText()
