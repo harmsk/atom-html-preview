@@ -96,10 +96,37 @@ class AtomHtmlPreviewView extends ScrollView
 
   save: (callback) ->
     # Temp file path
-    outPath = path.resolve path.join(os.tmpdir(), @editor.getTitle())
-    # Add base tag; allow relative links to work despite being loaded
-    # as the src of an iframe
-    out = "<base href=\"" + @getPath() + "\">" + @editor.getText()
+    outPath = path.resolve os.tmpdir() + @editor.getTitle() + ".html"
+    out = ""
+    fileEnding = @editor.getTitle().split(".").pop()
+
+    if atom.config.get("atom-html-preview.enableMathJax")
+      out += """
+      <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['\\\\f$','\\\\f$']]},
+      menuSettings: {zoom: 'Click'}
+      });
+      </script>
+      <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+      </script>
+      """
+
+    if atom.config.get("atom-html-preview.preserveWhiteSpaces") and fileEnding in atom.config.get("atom-html-preview.fileEndings")
+      # Enclose in <pre> statement to preserve whitespaces
+      out += """
+      <style type="text/css">
+      body { white-space: pre; }
+      </style>
+      """
+    else
+      # Add base tag; allow relative links to work despite being loaded
+      # as the src of an iframe
+      out += "<base href=\"" + @getPath() + "\">"
+
+    out += @editor.getText()
+
     @tmpPath = outPath
     fs.writeFile outPath, out, callback
 
