@@ -1,18 +1,5 @@
 # Atom HTML Preview
 
-## Warning!
-
-Version **0.1.13** works fine. Please install 0.1.13 till we fix the
-problem.
-
-    apm install atom-html-preview@0.1.13 # or try
-    apm install atom-html-preview@0.1.11
-
-
-We need maintainers! Please ping @vigo
-
-***
-
 A live preview tool for Atom Editor.
 
 Install:
