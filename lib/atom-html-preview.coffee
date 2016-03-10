@@ -56,7 +56,7 @@ module.exports =
         @htmlPreviewView = new HtmlPreviewView(editorId: pathname.substring(1))
       else
         @htmlPreviewView = new HtmlPreviewView(filePath: pathname)
-    
+
       return htmlPreviewView
 
   toggle: ->
