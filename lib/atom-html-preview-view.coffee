@@ -99,7 +99,7 @@ class AtomHtmlPreviewView extends ScrollView
 
   save: (callback) ->
     # Temp file path
-    outPath = path.resolve os.tmpdir() + @editor.getTitle() + ".html"
+    outPath = path.resolve path.join(os.tmpdir(), @editor.getTitle() + ".html")
     out = ""
     fileEnding = @editor.getTitle().split(".").pop()
 
