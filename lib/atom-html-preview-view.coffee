@@ -164,8 +164,8 @@ class AtomHtmlPreviewView extends ScrollView
     fs.writeFile outPath, out, =>
       try
         @renderHTMLCode()
-      catch (error)
-        @showError(error)
+      catch error
+        @showError error
 
   renderHTMLCode: () ->
     unless @webview?
