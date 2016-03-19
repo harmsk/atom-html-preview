@@ -16,7 +16,9 @@ class AtomHtmlPreviewView extends ScrollView
     new AtomHtmlPreviewView(state)
 
   @content: ->
-    @div class: 'atom-html-preview native-key-bindings', tabindex: -1
+    @div class: 'atom-html-preview native-key-bindings', tabindex: -1, =>
+      @div class: 'show-error', style: 'z-index: 2; padding: 2em;'
+      @div class: 'show-loading', style: 'z-index: 1; padding: 2em;', "Loading HTML"
 
   constructor: ({@editorId, filePath}) ->
     super
@@ -85,6 +87,21 @@ class AtomHtmlPreviewView extends ScrollView
     null
 
   handleEvents: =>
+    contextMenuClientX = 0
+    contextMenuClientY = 0
+
+    @on 'contextmenu', (event) ->
+      contextMenuClientY = event.clientY
+      contextMenuClientX = event.clientX
+
+    atom.commands.add @element,
+      'atom-html-preview:open-devtools': =>
+        @webview.openDevTools()
+      'atom-html-preview:inspect': =>
+        @webview.inspectElement(contextMenuClientX, contextMenuClientY)
+      'atom-html-preview:print': =>
+        @webview.print()
+
 
     changeHandler = =>
       @renderHTML()
@@ -137,22 +154,37 @@ class AtomHtmlPreviewView extends ScrollView
       """
     else
       # Add base tag; allow relative links to work despite being loaded
-      # as the src of an iframe
+      # as the src of an webview
       out += "<base href=\"" + @getPath() + "\">"
 
     out += @editor.getText()
 
     @tmpPath = outPath
     fs.writeFile outPath, out, =>
-      @renderHTMLCode()
+      try {
+        @renderHTMLCode()
+      } catch (error) {
+        @showError(error)
+      }
 
   renderHTMLCode: () ->
-    iframe = document.createElement("iframe")
-    # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
-    # Allows for the use of relative resources (scripts, styles)
-    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin")
-    iframe.src = @tmpPath
-    @html $ iframe
+    unless @webview?
+      webview = document.createElement("webview")
+      # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
+      # Allows for the use of relative resources (scripts, styles)
+      webview.setAttribute("sandbox", "allow-scripts allow-same-origin")
+      @webview = webview
+      @append $ webview
+
+    @webview.src = @tmpPath
+    try
+      @find('.show-error').hide()
+      @find('.show-loading').hide()
+      @webview.reload()
+
+    catch error
+      null
+
     # @trigger('atom-html-preview:html-changed')
     atom.commands.dispatch 'atom-html-preview', 'html-changed'
 
@@ -172,10 +204,11 @@ class AtomHtmlPreviewView extends ScrollView
   showError: (result) ->
     failureMessage = result?.message
 
-    @html $$$ ->
+    @find('.show-error')
+    .html $$$ ->
       @h2 'Previewing HTML Failed'
       @h3 failureMessage if failureMessage?
+    .show()
 
   showLoading: ->
-    @html $$$ ->
-      @div class: 'atom-html-spinner', 'Loading HTML Preview\u2026'
+    @find('.show-loading').show()
