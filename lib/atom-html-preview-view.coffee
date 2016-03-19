@@ -17,8 +17,9 @@ class AtomHtmlPreviewView extends ScrollView
 
   @content: ->
     @div class: 'atom-html-preview native-key-bindings', tabindex: -1, =>
-      @div class: 'show-error', style: 'z-index: 2; padding: 2em;'
-      @div class: 'show-loading', style: 'z-index: 1; padding: 2em;', "Loading HTML"
+      style = 'z-index: 2; padding: 2em;'
+      @div class: 'show-error', style: style
+      @div class: 'show-loading', style: style, "Loading HTML"
 
   constructor: ({@editorId, filePath}) ->
     super
@@ -161,11 +162,10 @@ class AtomHtmlPreviewView extends ScrollView
 
     @tmpPath = outPath
     fs.writeFile outPath, out, =>
-      try {
+      try
         @renderHTMLCode()
-      } catch (error) {
+      catch (error)
         @showError(error)
-      }
 
   renderHTMLCode: () ->
     unless @webview?
