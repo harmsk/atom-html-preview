@@ -32,6 +32,18 @@ class AtomHtmlPreviewView extends ScrollView
         atom.packages.onDidActivatePackage =>
           @subscribeToFilePath(filePath)
 
+    # Disable pointer-events while resizing
+    handles = $("atom-pane-resize-handle")
+    handles.on 'mousedown', => @onStartedResize()
+
+  onStartedResize: ->
+    @css 'pointer-events': 'none'
+    document.addEventListener 'mouseup', @onStoppedResizing.bind this
+
+  onStoppedResizing: ->
+    @css 'pointer-events': 'all'
+    document.removeEventListener 'mouseup', @onStoppedResizing
+
   serialize: ->
     deserializer : 'AtomHtmlPreviewView'
     filePath     : @getPath()
