@@ -2,6 +2,14 @@
   'atom-text-editor': [
     {label: 'Preview HTML', command: 'atom-html-preview:toggle'}
   ]
+  '.atom-html-preview webview': [
+    {label: 'Cut', command: 'core:cut'}
+    {label: 'Copy', command: 'core:copy'}
+    {label: 'Paste', command: 'core:paste'}
+    {label: 'Print', command: 'atom-html-preview:print'}
+    {label: 'Open Devtools', command: 'atom-html-preview:open-devtools'}
+    {label: 'Inspect', command: 'atom-html-preview:inspect'}
+  ]
 
 'menu': [
   {
