@@ -20,6 +20,10 @@ module.exports =
       default: ["c", "h"]
       items:
         type: 'string'
+    scrollToCursor:
+      type: 'boolean'
+      description: 'Attempts to scroll the webview to the section of your HTML you are editing based on your cursor\'s position.'
+      default: false
     enableMathJax:
       type: 'boolean'
       description: 'Enable MathJax inline rendering \\f$ \\pi \\f$'

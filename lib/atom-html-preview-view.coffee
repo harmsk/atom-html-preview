@@ -4,6 +4,31 @@ fs                    = require 'fs'
 path                  = require 'path'
 os                    = require 'os'
 
+scrollInjectScript = """
+<script>
+(function () {
+  var scriptTag = document.scripts[document.scripts.length - 1];
+  document.addEventListener('DOMContentLoaded',()=>{
+    var elem = document.createElement("span")
+    try {
+      // Scroll to this current script tag
+      elem.style.width = 100
+      // Center the scrollY
+      elem.style.height = "20vh"
+      elem.style.marginTop = "-20vh"
+      elem.style.marginLeft = -100
+      elem.style.display = "block"
+      var par = scriptTag.parentNode
+      par.insertBefore(elem, scriptTag)
+      elem.scrollIntoView()
+    } catch (error) {}
+    try { elem.remove() } catch (error) {}
+    try { scriptTag.remove() } catch (error) {}
+  }, false)
+})();
+</script>
+"""
+
 module.exports =
 class AtomHtmlPreviewView extends ScrollView
   atom.deserializers.add(this)
@@ -158,7 +183,37 @@ class AtomHtmlPreviewView extends ScrollView
       # as the src of an webview
       out += "<base href=\"" + @getPath() + "\">"
 
-    out += @editor.getText()
+    # Scroll into view
+    editorText = @editor.getText()
+    firstSelection = this.editor.getSelections()[0]
+    { row, column } = firstSelection.getBufferRange().start
+
+    if atom.config.get("atom-html-preview.scrollToCursor")
+      try
+        offset = @_getOffset(editorText, row, column)
+
+        tagRE = /<((\/[\$\w\-])|br|input|link)\/?>/.source
+        lastTagRE= ///#{tagRE}(?![\s\S]*#{tagRE})///i
+        findTagBefore = (beforeIndex) ->
+          #sample = editorText.slice(startIndex, startIndex + 300)
+          matchedClosingTag = editorText.slice(0, beforeIndex).match(lastTagRE)
+          if matchedClosingTag
+            return matchedClosingTag.index + matchedClosingTag[0].length
+          else
+            return -1
+
+        tagIndex = findTagBefore(offset)
+        if tagIndex > -1
+          editorText = """
+          #{editorText.slice(0, tagIndex)}
+          #{scrollInjectScript}
+          #{editorText.slice(tagIndex)}
+          """
+
+      catch error
+        return -1
+
+    out += editorText
 
     @tmpPath = outPath
     fs.writeFile outPath, out, =>
@@ -188,6 +243,19 @@ class AtomHtmlPreviewView extends ScrollView
 
     # @trigger('atom-html-preview:html-changed')
     atom.commands.dispatch 'atom-html-preview', 'html-changed'
+
+  # Get the offset of a file at a specific Point in the file
+  _getOffset: (text, row, column=0) ->
+    line_re = /\n/g
+    match_index = null
+    while row--
+      if match = line_re.exec(text)
+        match_index = match.index
+      else
+        return -1
+    offset = match_index + column
+    return if offset < text.length then offset else -1
+
 
   getTitle: ->
     if @editor?
