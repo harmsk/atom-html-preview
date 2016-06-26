@@ -173,6 +173,7 @@ class AtomHtmlPreviewView extends ScrollView
       # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
       # Allows for the use of relative resources (scripts, styles)
       webview.setAttribute("sandbox", "allow-scripts allow-same-origin")
+      webview.setAttribute("style", "height: 100%")
       @webview = webview
       @append $ webview
 
