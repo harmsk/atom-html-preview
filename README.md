@@ -1,3 +1,5 @@
+No more maintenance... Please do not use this package...
+
 # Atom HTML Preview
 
 A live preview tool for Atom Editor.
