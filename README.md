@@ -1,13 +1,15 @@
-No more maintenance... Please do not use this package...
-
 # Atom HTML Preview
+
+*kysko note: trying a few changes, not tested yet...*
 
 A live preview tool for Atom Editor.
 
+<!--
 Install:
 ```bash
 apm install atom-html-preview
 ```
+-->
 
 Toggle HTML Preview:
 
