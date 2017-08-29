@@ -1,7 +1,5 @@
 # Atom HTML Preview
 
-*kysko note: trying a few changes, not tested yet...*
-
 A live preview tool for Atom Editor.
 
 <!--
