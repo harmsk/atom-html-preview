@@ -75,7 +75,7 @@ module.exports =
       return
 
     previousActivePane = atom.workspace.getActivePane()
-    atom.workspace.open(uri, split: 'right', searchAllPanes: true).done (htmlPreviewView) ->
+    atom.workspace.open(uri, split: 'right', searchAllPanes: true).then (htmlPreviewView) ->
       if htmlPreviewView instanceof HtmlPreviewView
         htmlPreviewView.renderHTML()
         previousActivePane.activate()
