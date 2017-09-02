@@ -1,7 +1,7 @@
 {
   "name": "atom-html-preview",
   "main": "./lib/atom-html-preview",
-  "version": "0.1.24",
+  "version": "0.2.0",
   "description": "A live preview tool for Atom Editor.",
   "repository": {
     "type": "git",
@@ -14,7 +14,9 @@
   "dependencies": {
     "atom-space-pen-views": "^2.0.5"
   },
-  "activationHooks": ["language-html:grammar-used"],
+  "activationHooks": [
+    "language-html:grammar-used"
+  ],
   "readme": "# Atom HTML Preview\n\nA live preview tool for Atom Editor.\n\nInstall:\n```bash\napm install atom-html-preview\n```\n\nToogle HTML Preview:\n\nPress `CTRL-P` in editor to open Preview.",
   "readmeFilename": "README.md",
   "bugs": {
