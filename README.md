@@ -2,12 +2,10 @@
 
 A live preview tool for Atom Editor.
 
-<!--
 Install:
 ```bash
 apm install atom-html-preview
 ```
--->
 
 Toggle HTML Preview:
 

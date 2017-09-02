@@ -21,4 +21,21 @@
     "url": "https://github.com/harmsk/atom-html-preview/issues"
   },
   "homepage": "https://github.com/harmsk/atom-html-preview",
+  "_id": "atom-html-preview@0.1.3",
+  "_shasum": "1b6a3d9636c2b2411e84e1c95ab2121ea54e153e",
+  "_resolved": "file:../d-115111-11388-1t9q7wq/package.tgz",
+  "_from": "../d-115111-11388-1t9q7wq/package.tgz",
+  "_atomModuleCache": {
+    "version": 1,
+    "dependencies": [],
+    "extensions": {
+      ".coffee": [
+        "lib/atom-html-preview-view.coffee",
+        "lib/atom-html-preview.coffee"
+      ],
+      ".json": [
+        "package.json"
+      ]
+    }
+  }
 }
