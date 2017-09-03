@@ -232,7 +232,13 @@ class AtomHtmlPreviewView extends ScrollView
       @webview = webview
       @append $ webview
 
-    @webview.src = @tmpPath
+    # load url in webview asynchronously to avoid crash.
+    webview = @webview
+    srcPath = @tmpPath
+    setTimeout ( ->
+      webview.setAttribute( 'src', srcPath )
+      ), 20
+
     try
       @find('.show-error').hide()
       @find('.show-loading').hide()
