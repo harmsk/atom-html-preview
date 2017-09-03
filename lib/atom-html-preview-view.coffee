@@ -237,7 +237,7 @@ class AtomHtmlPreviewView extends ScrollView
     srcPath = @tmpPath
     setTimeout ( ->
       webview.setAttribute( 'src', srcPath )
-      ), 20
+      ), 0
 
     try
       @find('.show-error').hide()
