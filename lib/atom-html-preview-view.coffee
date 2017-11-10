@@ -37,6 +37,9 @@ class AtomHtmlPreviewView extends ScrollView
   onDidChangeTitle    : -> new Disposable()
   onDidChangeModified : -> new Disposable()
 
+  webviewElementLoaded : false
+  renderLater : true
+
   @deserialize: (state) ->
     new AtomHtmlPreviewView(state)
 
@@ -44,7 +47,7 @@ class AtomHtmlPreviewView extends ScrollView
     @div class: 'atom-html-preview native-key-bindings', tabindex: -1, =>
       style = 'z-index: 2; padding: 2em;'
       @div class: 'show-error', style: style
-      @div class: 'show-loading', style: style, "Loading HTML"
+      @tag 'webview', src: path.resolve(__dirname, '../html/loading.html'), outlet: 'htmlview', disablewebsecurity:'on', allowfileaccessfromfiles:'on', allowPointerLock:'on'
 
   constructor: ({@editorId, filePath}) ->
     super
@@ -63,6 +66,16 @@ class AtomHtmlPreviewView extends ScrollView
     # Disable pointer-events while resizing
     handles = $("atom-pane-resize-handle")
     handles.on 'mousedown', => @onStartedResize()
+
+    @find('.show-error').hide()
+    @webview = @htmlview[0]
+
+    @webview.addEventListener 'dom-ready', =>
+      @webviewElementLoaded = true
+      if @renderLater
+        @renderLater = false
+        @renderHTMLCode()
+
 
   onStartedResize: ->
     @css 'pointer-events': 'none'
@@ -145,7 +158,6 @@ class AtomHtmlPreviewView extends ScrollView
       @editorSub.add @editor.onDidChangePath => @trigger 'title-changed'
 
   renderHTML: ->
-    @showLoading()
     if @editor?
       if not atom.config.get("atom-html-preview.triggerOnSave") && @editor.getPath()?
         @save(@renderHTMLCode)
@@ -223,32 +235,16 @@ class AtomHtmlPreviewView extends ScrollView
         @showError error
 
   renderHTMLCode: () ->
-    unless @webview?
-      webview = document.createElement("webview")
-      # Fix from @kwaak (https://github.com/webBoxio/atom-html-preview/issues/1/#issuecomment-49639162)
-      # Allows for the use of relative resources (scripts, styles)
-      webview.setAttribute("sandbox", "allow-scripts allow-same-origin")
-      webview.setAttribute("style", "height: 100%")
-      @webview = webview
-      @append $ webview
+    @find('.show-error').hide()
+    @htmlview.show()
 
-    # load url in webview asynchronously to avoid crash.
-    webview = @webview
-    srcPath = @tmpPath
-    setTimeout ( ->
-      webview.setAttribute( 'src', srcPath )
-      ), 0
+    if @webviewElementLoaded
+      @webview.loadURL("file://" + @tmpPath)
 
-    try
-      @find('.show-error').hide()
-      @find('.show-loading').hide()
-      @webview.reload()
-
-    catch error
-      null
-
-    # @trigger('atom-html-preview:html-changed')
-    atom.commands.dispatch 'atom-html-preview', 'html-changed'
+      # @trigger('atom-html-preview:html-changed')
+      atom.commands.dispatch 'atom-html-preview', 'html-changed'
+    else
+      @renderLater = true
 
   # Get the offset of a file at a specific Point in the file
   _getOffset: (text, row, column=0) ->
@@ -279,11 +275,9 @@ class AtomHtmlPreviewView extends ScrollView
   showError: (result) ->
     failureMessage = result?.message
 
+    @htmlview.hide()
     @find('.show-error')
     .html $$$ ->
       @h2 'Previewing HTML Failed'
       @h3 failureMessage if failureMessage?
     .show()
-
-  showLoading: ->
-    @find('.show-loading').show()
