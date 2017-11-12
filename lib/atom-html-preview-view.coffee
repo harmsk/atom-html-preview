@@ -239,10 +239,11 @@ class AtomHtmlPreviewView extends ScrollView
     @htmlview.show()
 
     if @webviewElementLoaded
-      @webview.loadURL("file://" + @tmpPath)
+      process.nextTick =>
+        @webview.loadURL("file://" + @tmpPath)
 
-      # @trigger('atom-html-preview:html-changed')
-      atom.commands.dispatch 'atom-html-preview', 'html-changed'
+        # @trigger('atom-html-preview:html-changed')
+        atom.commands.dispatch 'atom-html-preview', 'html-changed'
     else
       @renderLater = true
 
