@@ -192,25 +192,6 @@ class AtomHtmlPreviewView extends ScrollView
 
     editorText = @editor.getText()
 
-    # Add base tag; allow relative links to work despite being loaded
-    # as the src of an webview
-
-    baseText = "<base href=\"" + @getPath() + "\">"
-
-    matchedHead = /<head[^>]*>/i.exec(editorText)
-
-    if matchedHead
-      afterHeadPos = matchedHead.index + matchedHead[0].length
-      before = editorText.slice(0, afterHeadPos)
-      after = editorText.slice(afterHeadPos)
-      editorText = """
-        #{before}
-        #{baseText}
-        #{after}
-        """
-    else
-      out += baseText
-
     # Scroll into view
 
     if atom.config.get("atom-html-preview.scrollToCursor")
@@ -240,6 +221,25 @@ class AtomHtmlPreviewView extends ScrollView
 
       catch error
         return -1
+
+    # Add base tag; allow relative links to work despite being loaded
+    # as the src of an webview
+
+    baseText = "<base href=\"" + @getPath() + "\">"
+
+    matchedHead = /<head[^>]*>/i.exec(editorText)
+
+    if matchedHead
+      afterHeadPos = matchedHead.index + matchedHead[0].length
+      before = editorText.slice(0, afterHeadPos)
+      after = editorText.slice(afterHeadPos)
+      editorText = """
+        #{before}
+        #{baseText}
+        #{after}
+        """
+    else
+      out += baseText
 
     out += editorText
 
