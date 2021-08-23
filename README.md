@@ -2,21 +2,15 @@
 
 A live preview tool for Atom Editor.
 
-Install:
-```bash
-apm install atom-html-preview
-```
+## How to Use
 
-Toggle HTML Preview:
+1. Open an HTML file. (Atom must recognize the file's grammar as HTML.)
+2. From the command pallete search "Atom Html Preview: Toggle" or press `CTRL-SHIFT-H` in the editor to open the preview pane.
 
-Press `CTRL-SHIFT-H` in the editor to open the preview pane.
+**Note:** Source file must use the HTML grammar for the preview feature to activate. See bottom status panel for current file's grammar. If the grammar is PHP, then you won't be able to activate the HTML preview.
 
-<!--
-![Atom HTML Preview](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-html-preview.png)
+## Bugs / Issues / Feature Requests
 
-An example with [Twitter Bootstrap 3 Package][1]
+**Pull requests welcome and encouraged.**
 
-![Atom HTML Preview with Bootstrap](https://dl.dropboxusercontent.com/u/20947008/webbox/atom/atom-bootstrap-3.gif)
-
-[1]: http://atom.io/packages/atom-bootstrap3
--->
+Bug reports without a pull request will likely go ignored.
